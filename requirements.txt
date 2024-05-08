@@ -8,3 +8,4 @@ html5lib
 lxml
 streamlit
 streamlit-option-menu
+openpyxl
