@@ -1,5 +1,8 @@
 ipykernel
 pandas
+numpy
+matplotlib
+seaborn
 bs4
 html5lib
 lxml
