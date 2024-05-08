@@ -6,15 +6,9 @@ import statistics
 warnings.filterwarnings("ignore")
 
 class DCF:
-    def __init__(self, company, coc, roce, growth_during_hgp, hgp, fade_period, terminal_growth_rate):
+    def __init__(self, company):
         # Initialize instance attributes
         self.company = company
-        self.coc = coc  # Cost of capital
-        self.roce = roce  # Return on capital employed
-        self.growth_during_hgp = growth_during_hgp  # Growth rate during high growth period
-        self.hgp = hgp  # High growth period
-        self.fade_period = fade_period  # Period over which growth fades
-        self.terminal_growth_rate = terminal_growth_rate  # Terminal growth rate
 
     @staticmethod
     def scrap_data(company): # Static method to scrape data from webpage
