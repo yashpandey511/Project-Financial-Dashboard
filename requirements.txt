@@ -1,0 +1,7 @@
+ipykernel
+pandas
+bs4
+html5lib
+lxml
+streamlit
+streamlit-option-menu
