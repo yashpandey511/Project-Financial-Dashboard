@@ -1,5 +1,5 @@
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objs as go
 import streamlit as st # type: ignore
 from streamlit_option_menu import option_menu
 from model import DataScraper
@@ -8,6 +8,9 @@ warnings.filterwarnings("ignore")
 
 
 def main():
+    # settings
+    pd.options.plotting.backend = "plotly"
+
     with st.sidebar:
         selected_option = option_menu(
             menu_title='Main Menu',
@@ -47,10 +50,113 @@ def main():
         st.title('Company Data Scraper')
         company = st.text_input('Enter the Ticker:')
         data_scraper = DataScraper(company)
-        if st.button('Scrape Data'):
+        if st.button('Visualize QoQ Results'):
             qoq_df = data_scraper.qoq_results()
-            fig = px.line(qoq_df, x=qoq_df['Quarter'], y=qoq_df.iloc[:, 1], title='Income Statement - QoQ Results')
+
+            #Area Plot for QoQ Results - Sales, Expenses, Net Profit
+             # Create traces
+            trace1 = go.Scatter(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 1],
+                mode='lines',
+                fill='tozeroy',
+                name='Sales'
+            )
+            trace2 = go.Scatter(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 2],
+                mode='lines',
+                fill='tozeroy',
+                name='Expenses'
+            )
+            trace3 = go.Scatter(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 10],
+                mode='lines',
+                fill='tozeroy',
+                name='Net Profit'
+            )
+
+            data = [trace1, trace2, trace3]
+
+            # Layout
+            layout = go.Layout(
+                title='QoQ Results - Sales, Expenses & Net Profit',
+                xaxis=dict(title='Quarter'),
+                yaxis=dict(title='Amount (in Crs.)'),
+                legend=dict(x=0, y=1)
+            )
+
+            # Plot
+            fig = go.Figure(data=data, layout=layout)
             st.plotly_chart(fig)
+
+            #Line Plot for QoQ Results - Net Profit, EPS
+            # Create traces
+            trace1 = go.Scatter(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 10],
+                mode='lines',
+                name='Net Profit'
+            )
+            trace2 = go.Scatter(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 11],
+                mode='lines',
+                name='EPS',
+                yaxis='y2'
+            )
+            data = [trace1, trace2]
+
+            # Layout
+            layout = go.Layout(
+                title='QoQ Results - Net Profit & EPS',
+                xaxis=dict(title='Quarter'),
+                yaxis=dict(title='Net Profit (in Crs.)', showgrid=False),
+                yaxis2=dict(title='EPS', overlaying='y', side='right', showgrid=False),
+                legend=dict(x=0, y=1)
+            )
+
+            # Plot
+            fig = go.Figure(data=data, layout=layout)
+            st.plotly_chart(fig)
+
+            # Create stacked bar chart traces
+            trace1 = go.Bar(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 3],
+                name='Operating Profit'
+            )
+            trace2 = go.Bar(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 5],
+                name='Other Income'
+            )
+            trace3 = go.Bar(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 6],
+                name='Interest'
+            )
+            trace4 = go.Bar(
+                x=qoq_df['Quarter'],
+                y=qoq_df.iloc[:, 7],
+                name='Depreciation'
+            )
+
+            data = [trace1, trace2, trace3, trace4]
+
+            # Layout
+            layout = go.Layout(
+                title='Breakdown of Profit before Tax',
+                xaxis=dict(title='Quarter'),
+                yaxis=dict(title='Amount (in Crs.)'),
+                barmode='stack'  # Stacked bar chart
+            )
+
+            # Plot
+            fig = go.Figure(data=data, layout=layout)
+            st.plotly_chart(fig)
+
         
     elif selected_option == 'YoY Results':
         a = 1

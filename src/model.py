@@ -13,7 +13,7 @@ class DataScraper:
     @staticmethod
     def scrap_data(company): # Static method to scrape data from webpage
         # Scrape data from web page
-        url = f'https://www.screener.in/company/{company}/'
+        url = f'https://www.screener.in/company/{company}/consolidated/'
         response = requests.get(url)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
