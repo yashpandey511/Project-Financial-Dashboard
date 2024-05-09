@@ -5,7 +5,7 @@ import warnings
 import statistics
 warnings.filterwarnings("ignore")
 
-class DCF:
+class DataScraper:
     def __init__(self, company):
         # Initialize instance attributes
         self.company = company
@@ -28,7 +28,9 @@ class DCF:
 
     def general_details(self):  # Method to extract general details about the company
         soup = self.scrap_data(self.company)
-        search_inputs = soup.find_all(class_='number')
+        company_ratios = soup.find(class_='company-ratios')
+        search_inputs = company_ratios.find_all(class_='number')
+        print(company_ratios.encode('utf-8'))
         # Initialize an empty list to store text from each element
         general_details = []
         # Iterate over each element in search_inputs
@@ -38,7 +40,7 @@ class DCF:
             lines = text.split('\n')
             # Append non-empty lines to the general_details list
             general_details.extend([line for line in lines if line.strip()])
-        return general_details
+        print(general_details)
 
     def extract_table(self): # Method to extract various financial tables from the webpage
         soup = self.scrap_data(self.company)
@@ -53,15 +55,6 @@ class DCF:
                 return tables_data
             else:
                 return None
-        else:
-            return None
-
-    def calculate_pe(self): # Method to calculate the PE ratio of the company
-        general_details = self.general_details()
-        if general_details:
-            # Current PE Ratio
-            current_pe = general_details[4]
-            return current_pe
         else:
             return None
         
@@ -95,20 +88,100 @@ class DCF:
             return None
 
     
-    def calculate_compound_sales_growth(self): # Method to calculate compound sales growth rates
+    def compound_sales_growth(self): # Method to calculate compound sales growth rates
         table = self.extract_table()
         compound_sales_growth_df = table[2]
         csg_ttm = compound_sales_growth_df['Compounded Sales Growth.1'][3]
         csg_3_year = compound_sales_growth_df['Compounded Sales Growth.1'][2]
         csg_5_year = compound_sales_growth_df['Compounded Sales Growth.1'][1]
         csg_10_year = compound_sales_growth_df['Compounded Sales Growth.1'][0]
-        return csg_ttm, csg_3_year, csg_5_year, csg_10_year
+        df_csg = pd.DataFrame({'TTM': [csg_ttm], '3 Year': [csg_3_year], '5 Year': [csg_5_year], '10 Year': [csg_10_year]})
+        return df_csg
     
-    def calculate_compound_profit_growth(self): # Method to calculate compound profit growth rates
+    def compound_profit_growth(self): # Method to calculate compound profit growth rates
         table = self.extract_table()
         compound_profit_growth_df = table[3]
         cpg_ttm = compound_profit_growth_df['Compounded Profit Growth.1'][3]
         cpg_3_year = compound_profit_growth_df['Compounded Profit Growth.1'][2]
         cpg_5_year = compound_profit_growth_df['Compounded Profit Growth.1'][1]
         cpg_10_year = compound_profit_growth_df['Compounded Profit Growth.1'][0]
-        return cpg_ttm, cpg_3_year, cpg_5_year, cpg_10_year
+        df_cpg = pd.DataFrame({'TTM': [cpg_ttm], '3 Year': [cpg_3_year], '5 Year': [cpg_5_year], '10 Year': [cpg_10_year]})
+        return df_cpg
+    
+    def qoq_results(self):
+        table = self.extract_table()
+        qoq = table[0]
+        qoq_df = pd.DataFrame(qoq.iloc[0:11, :]).T
+        qoq_df = qoq_df.reset_index()
+        qoq_df.columns = qoq_df.iloc[0]
+        qoq_df = qoq_df[1:]
+        qoq_df = qoq_df.rename(columns={qoq_df.columns[0]: 'Quarter'})
+        return qoq_df
+    
+    def yoy_results(self):
+        table = self.extract_table()
+        yoy = table[1]
+        yoy_df = pd.DataFrame(yoy.iloc[0:11, :]).T
+        yoy_df = yoy_df.reset_index()
+        yoy_df.columns = yoy_df.iloc[0]
+        yoy_df = yoy_df[1:]
+        yoy_df = yoy_df.rename(columns={yoy_df.columns[0]: 'Year'})
+        return yoy_df
+
+    def stock_price_cagr(self):
+        table = self.extract_table()
+        stock_price_cagr_df = table[4]
+        stock_price_cagr_df.columns = ['Number of Years', 'Stock Price CAGR']
+        return stock_price_cagr_df
+
+    def roe(self):
+        table = self.extract_table()
+        roe_df = table[5]
+        roe_df.columns = ['Number of Years', 'Return on Equity']
+        return roe_df
+
+    def balance_sheet(self):
+        table = self.extract_table()
+        balance_sheet = table[6]
+        balance_sheet_df = pd.DataFrame(balance_sheet.iloc[0:13, :]).T
+        balance_sheet_df = balance_sheet_df.reset_index()
+        balance_sheet_df.columns = balance_sheet_df.iloc[0]
+        balance_sheet_df = balance_sheet_df[1:]
+        balance_sheet_df = balance_sheet_df.rename(columns={balance_sheet_df.columns[0]: 'Year'})
+        return balance_sheet_df
+
+
+    def cashflow(self):
+        table = self.extract_table()
+        cashflow = table[7]
+        cashflow_df = pd.DataFrame(cashflow.iloc[0:4, :]).T
+        cashflow_df = cashflow_df.reset_index()
+        cashflow_df.columns = cashflow_df.iloc[0]
+        cashflow_df = cashflow_df[1:]
+        cashflow_df = cashflow_df.rename(columns={cashflow_df.columns[0]: 'Year'})
+        return cashflow_df
+
+    def ratios(self):
+        table = self.extract_table()
+        ratios = table[8]
+        try:
+            ratios_df = pd.DataFrame(ratios.iloc[0:6, :]).T
+            ratios_df = ratios_df.reset_index()
+            ratios_df.columns = ratios_df.iloc[0]
+            ratios_df = ratios_df[1:]
+            ratios_df = ratios_df.rename(columns={ratios_df.columns[0]: 'Year'})
+            return ratios_df
+        except:
+            return
+        
+    def shareholding_pattern(self):
+        table = self.extract_table()
+        shareholding = table[9]
+        shareholding_df = pd.DataFrame(shareholding.iloc[0:6, :]).T
+        shareholding_df = shareholding_df.reset_index()
+        shareholding_df.columns = shareholding_df.iloc[0]
+        shareholding_df = shareholding_df[1:]
+        shareholding_df = shareholding_df.rename(columns={shareholding_df.columns[0]: 'Year'})  
+        return shareholding_df
+        
+    

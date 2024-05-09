@@ -1,11 +1,9 @@
 ipykernel
 pandas
-numpy
-matplotlib
-seaborn
 bs4
 html5lib
 lxml
 streamlit
 streamlit-option-menu
 openpyxl
+plotly
