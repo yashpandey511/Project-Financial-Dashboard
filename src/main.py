@@ -48,9 +48,9 @@ def main():
         company = st.text_input('Enter the Ticker:')
         data_scraper = DataScraper(company)
         if st.button('Scrape Data'):
-            st.write("Income Statement - QoQ Results")
             qoq_df = data_scraper.qoq_results()
-            st.line_chart()
+            fig = px.line(qoq_df, x=qoq_df['Quarter'], y=qoq_df.iloc[:, 1], title='Income Statement - QoQ Results')
+            st.plotly_chart(fig)
         
     elif selected_option == 'YoY Results':
         a = 1
