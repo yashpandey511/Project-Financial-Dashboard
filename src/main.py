@@ -176,18 +176,16 @@ def main():
             # Pie Chart for Shareholder Pattern
             shareholder_df = data_scraper.shareholding_pattern()
 
-            # Streamlit UI
-            st.write('Shareholder Structure Over Time')
-
             # Create pie chart traces
-            labels = shareholder_df.columns[1:5].tolist()
-            values = shareholder_df.iloc[-1, 1:5].str.rstrip('%').astype(float).tolist()
+            shareholder = shareholder_df.drop('No. of Shareholders', axis = 1)
+            labels = shareholder.columns.tolist()
+            values = shareholder.iloc[-1, 1:5].str.rstrip('%').astype(float).tolist()
 
             fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=0.3)])
 
             # Layout
             fig.update_layout(
-                title='Shareholder Distribution for Period: ' + shareholder_df.iloc[-1, 0],
+                title='Shareholder Distribution for Period: ' + shareholder.iloc[-1, 0],
             )
 
             # Plot
