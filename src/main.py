@@ -14,12 +14,12 @@ def main():
     with st.sidebar:
         selected_option = option_menu(
             menu_title='Main Menu',
-            options=['Raw Data', 'QoQ Performance', 'YoY Performance'],
+            options=['Financial Statements', 'QoQ Performance', 'YoY Performance'],
             default_index=0,
         )
 
     
-    if selected_option == 'Raw Data':
+    if selected_option == 'Financial Statements':
         st.title('Company Data Scraper')
         company = st.text_input('Enter the Ticker:')
         data_scraper = DataScraper(company)
@@ -47,7 +47,6 @@ def main():
             st.write(data_scraper.shareholding_pattern())
 
     elif selected_option == 'QoQ Performance':
-        st.title('Company Data Scraper')
         company = st.text_input('Enter the Ticker:')
         data_scraper = DataScraper(company)
         if st.button('Visualize QoQ Results'):
@@ -158,7 +157,6 @@ def main():
             st.plotly_chart(fig)
 
     elif selected_option == 'YoY Performance':
-        st.title('Company Data Scraper')
         company = st.text_input('Enter the Ticker: ')
         data_scraper = DataScraper(company)
         if st.button('Visualize YoY Results'):
