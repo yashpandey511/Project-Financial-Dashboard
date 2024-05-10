@@ -158,12 +158,23 @@ def main():
             st.plotly_chart(fig)
 
     elif selected_option == 'YoY Performance':
-        # YoY Results
         st.title('Company Data Scraper')
         company = st.text_input('Enter the Ticker: ')
         data_scraper = DataScraper(company)
         if st.button('Visualize YoY Results'):
-            a= 1
+            yoy_df = data_scraper.yoy_results()
+            # Line plot for YoY Cash Flow Trend
+            fig1 = go.Figure()
+
+            fig1.add_trace(go.Scatter(x=yoy_df['Year'], y=yoy_df.iloc[:, 1], mode='lines+markers', name='Operating Activities'))
+            fig1.add_trace(go.Scatter(x=yoy_df['Year'], y=yoy_df.iloc[:, 2], mode='lines+markers', name='Investing Activities'))
+            fig1.add_trace(go.Scatter(x=yoy_df['Year'], y=yoy_df.iloc[:, 3], mode='lines+markers', name='Financing Activities'))
+
+            fig1.update_layout(title='YoY Cash Flow Trend', xaxis_title='Year', yaxis_title='Cash Flow (in Crs.)')
+            st.plotly_chart(fig1)
+
+    
+            
 
         
 
