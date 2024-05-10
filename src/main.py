@@ -171,10 +171,27 @@ def main():
             fig1.update_layout(title='YoY Cash Flow Trend', xaxis_title='Year', yaxis_title='Cash Flow (in Crs.)')
             st.plotly_chart(fig1)
 
-    
-            
+            # Pie chart for YoY Revenue Composition
 
-        
+            # Pie Chart for Shareholder Pattern
+            shareholder_df = data_scraper.shareholding_pattern()
+
+            # Streamlit UI
+            st.write('Shareholder Structure Over Time')
+
+            # Create pie chart traces
+            labels = shareholder_df.columns[1:5].tolist()
+            values = shareholder_df.iloc[-1, 1:5].str.rstrip('%').astype(float).tolist()
+
+            fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=0.3)])
+
+            # Layout
+            fig.update_layout(
+                title='Shareholder Distribution for Period: ' + shareholder_df.iloc[-1, 0],
+            )
+
+            # Plot
+            st.plotly_chart(fig)
 
 if __name__ == '__main__':
     main()
