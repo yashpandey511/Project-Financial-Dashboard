@@ -21,7 +21,7 @@ def main():
     
     if selected_option == 'Raw Data':
         st.title('Company Data Scraper')
-        company = st.text_input('Enter the Ticker/Compnay Name:')
+        company = st.text_input('Enter the Ticker/  Compnay Name:')
         data_scraper = DataScraper(company)
         if st.button('Get Data'):
             st.write("Income Statement - QoQ Results")
@@ -163,9 +163,28 @@ def main():
         company = st.text_input('Enter the Ticker/Company Name:')
         data_scraper = DataScraper(company)
         if st.button('Visualize YoY Results'):
-            a = 1
-            
-        
+            shareholder_df = data_scraper.shareholding_pattern()
+            # Streamlit UI
+            st.title('Shareholder Structure Over Time')
+
+            # Slider for selecting period
+            quarters = shareholder_df['Year'].tolist()
+            selected_period_index = st.slider('Select Quarters', min_value=0, max_value=len(quarters)-1, value=len(quarters)-1)
+            selected_period = quarters[selected_period_index]
+
+            # Create pie chart traces
+            labels = ['Promoters', 'FIIs', 'DIIs', 'Public']
+            values = shareholder_df.iloc[selected_period_index, 1:5].str.rstrip('%').astype(float).tolist()
+
+            fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=0.3)])
+
+            # Layout
+            fig.update_layout(
+                title='Shareholder Distribution for Period: ' + selected_period,
+            )
+
+            # Plot
+            st.plotly_chart(fig)
         
 
 if __name__ == '__main__':
