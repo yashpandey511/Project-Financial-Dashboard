@@ -21,9 +21,9 @@ def main():
     
     if selected_option == 'Raw Data':
         st.title('Company Data Scraper')
-        company = st.text_input('Enter the Ticker:')
+        company = st.text_input('Enter the Ticker/Compnay Name:')
         data_scraper = DataScraper(company)
-        if st.button('Scrape Data'):
+        if st.button('Get Data'):
             st.write("Income Statement - QoQ Results")
             st.write(data_scraper.qoq_results())
             st.write("Profit and Loss - YoY Results")
@@ -48,7 +48,7 @@ def main():
 
     elif selected_option == 'QoQ Results':
         st.title('Company Data Scraper')
-        company = st.text_input('Enter the Ticker:')
+        company = st.text_input('Enter the Ticker/Company Name:')
         data_scraper = DataScraper(company)
         if st.button('Visualize QoQ Results'):
             qoq_df = data_scraper.qoq_results()
@@ -159,7 +159,13 @@ def main():
 
         
     elif selected_option == 'YoY Results':
-        a = 1
+        st.title('Company Data Scraper')
+        company = st.text_input('Enter the Ticker/Company Name:')
+        data_scraper = DataScraper(company)
+        if st.button('Visualize YoY Results'):
+            a = 1
+            
+        
         
 
 if __name__ == '__main__':
