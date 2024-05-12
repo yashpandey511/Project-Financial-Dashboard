@@ -173,41 +173,6 @@ def main():
                 fig1.update_layout(title='YoY Cash Flow Trend', xaxis_title='Year', yaxis_title='Cash Flow (in Crs.)')
                 st.plotly_chart(fig1)
 
-                #
-                balance_sheet_df = data_scraper.balance_sheet()
-
-                # Create stacked bar chart traces for assets, liabilities, and equity
-                trace_assets = go.Bar(
-                    x=balance_sheet_df.columns,
-                    y=balance_sheet_df['Total Assets'],
-                        name='Assets'
-                    )
-                trace_liabilities = go.Bar(
-                    x=balance_sheet_df.columns,
-                    y=balance_sheet_df['Total Liabilities'],
-                    name='Liabilities'
-                    )
-                trace_equity = go.Bar(
-                    x=balance_sheet_df.columns,
-                    y=balance_sheet_df['Equity Capital'],
-                    name='Equity'
-                    )
-
-                data = [trace_assets, trace_liabilities, trace_equity]
-
-                # Layout
-                layout = go.Layout(
-                    title='Balance Sheet',
-                    xaxis=dict(title='Category'),
-                    yaxis=dict(title='Amount (in Crs.)'),
-                    barmode='stack'  # Stacked bar chart
-                )
-
-                # Plot
-                fig = go.Figure(data=data, layout=layout)
-                st.plotly_chart(fig)
-
-
                 # Pie Chart for Shareholder Pattern
                 shareholder_df = data_scraper.shareholding_pattern()
                 # Create pie chart traces
