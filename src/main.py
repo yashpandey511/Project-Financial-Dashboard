@@ -170,22 +170,52 @@ def main():
                 fig1.add_trace(go.Scatter(x=yoy_df['Year'], y=yoy_df.iloc[:, 1], mode='lines+markers', name='Operating Activities'))
                 fig1.add_trace(go.Scatter(x=yoy_df['Year'], y=yoy_df.iloc[:, 2], mode='lines+markers', name='Investing Activities'))
                 fig1.add_trace(go.Scatter(x=yoy_df['Year'], y=yoy_df.iloc[:, 3], mode='lines+markers', name='Financing Activities'))
-
                 fig1.update_layout(title='YoY Cash Flow Trend', xaxis_title='Year', yaxis_title='Cash Flow (in Crs.)')
                 st.plotly_chart(fig1)
 
-                # Pie chart for YoY Revenue Composition
+                #
+                balance_sheet_df = data_scraper.balance_sheet()
+
+                # Create stacked bar chart traces for assets, liabilities, and equity
+                trace_assets = go.Bar(
+                    x=balance_sheet_df.columns,
+                    y=balance_sheet_df['Total Assets'],
+                        name='Assets'
+                    )
+                trace_liabilities = go.Bar(
+                    x=balance_sheet_df.columns,
+                    y=balance_sheet_df['Total Liabilities'],
+                    name='Liabilities'
+                    )
+                trace_equity = go.Bar(
+                    x=balance_sheet_df.columns,
+                    y=balance_sheet_df['Equity Capital'],
+                    name='Equity'
+                    )
+
+                data = [trace_assets, trace_liabilities, trace_equity]
+
+                # Layout
+                layout = go.Layout(
+                    title='Balance Sheet',
+                    xaxis=dict(title='Category'),
+                    yaxis=dict(title='Amount (in Crs.)'),
+                    barmode='stack'  # Stacked bar chart
+                )
+
+                # Plot
+                fig = go.Figure(data=data, layout=layout)
+                st.plotly_chart(fig)
+
 
                 # Pie Chart for Shareholder Pattern
                 shareholder_df = data_scraper.shareholding_pattern()
-
                 # Create pie chart traces
                 shareholder = shareholder_df.drop('No. of Shareholders', axis = 1)
                 labels = shareholder.columns.tolist()[1:]
                 values = shareholder.iloc[-1, 1:5].str.rstrip('%').astype(float).tolist()
 
                 fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=0.3)])
-
                 # Layout
                 fig.update_layout(
                     title='Shareholder Distribution for Period: ' + shareholder.iloc[-1, 0],

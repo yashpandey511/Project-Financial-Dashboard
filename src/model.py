@@ -7,7 +7,6 @@ warnings.filterwarnings("ignore")
 
 class DataScraper:
     def __init__(self, company):
-        # Initialize instance attributes
         self.company = company
 
     @staticmethod
