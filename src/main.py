@@ -19,7 +19,7 @@ def main():
         )
 
     st.title('Company Data Scraper')
-    company = st.text_input('Enter the Ticker:')
+    company = st.text_input('Enter the Stock Symbol:')
     data_scraper = DataScraper(company)
     if selected_option == 'Financial Statements':
         try:
@@ -46,7 +46,7 @@ def main():
                 st.write("Share Holding Pattern")
                 st.write(data_scraper.shareholding_pattern())
         except:
-            st.write("Enter the Ticker and click on 'Get Data' to view the Financial Statements.")
+            st.write("Enter the Stock Symbol and click on 'Get Data' to view the Financial Statements.")
 
     elif selected_option == 'QoQ Performance':
         try:
@@ -158,7 +158,7 @@ def main():
                 st.plotly_chart(fig)
         
         except:
-            st.write("Enter the Ticker and click on 'Visualize QoQ Results' to view the QoQ Performance.")
+            st.write("Enter the Stock Symbol and click on 'Visualize QoQ Results' to view the QoQ Performance.")
 
     elif selected_option == 'YoY Performance':
         try:
@@ -190,7 +190,7 @@ def main():
                 st.plotly_chart(fig)
 
         except:
-            st.write("Enter the Ticker and click on 'Visualize YoY Results' to view the YoY Performance.")
+            st.write("Enter the Stock Symbol and click on 'Visualize YoY Results' to view the YoY Performance.")
 
 
 if __name__ == '__main__':
