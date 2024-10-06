@@ -10,7 +10,7 @@ Libraries and Tools
 pandas
 pandas is a crucial library for data manipulation and analysis in Python. It offers data structures like DataFrames, enabling efficient data handling and operations such as merging, reshaping, and aggregating datasets. In our project, pandas is used for reading and writing data in various formats (CSV, Excel, JSON), cleaning and preprocessing raw financial data, and performing exploratory data analysis (EDA) to summarize and visualize key statistics.
 
-BeautifulSoup (bs4)
+*BeautifulSoup (bs4)* \n
 BeautifulSoup is a library for parsing HTML and XML documents, creating parse trees to facilitate web scraping. It allows for the extraction of data from web pages, making it essential for our project. We use BeautifulSoup to parse HTML content from financial websites, extract relevant financial data such as stock prices, P&L statements, and balance sheets, and navigate through the HTML structure to locate specific elements containing the required data.
 
 html5lib
